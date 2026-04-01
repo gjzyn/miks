@@ -1,0 +1,961 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3c2517">
+  <title>Harbor & Hearth Coffee</title>
+  <style>
+    :root {
+      --coffee-dark: #3c2517;
+      --coffee-mid: #7a5236;
+      --coffee-soft: #b07a4f;
+      --latte: #fff7ec;
+      --foam: rgba(255, 247, 236, 0.84);
+      --text-main: #2b1d14;
+      --text-soft: #5b4639;
+      --line: rgba(60, 37, 23, 0.14);
+      --shadow: 0 18px 40px rgba(58, 35, 20, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Gill Sans", "Trebuchet MS", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(255, 245, 227, 0.85), transparent 33%),
+        radial-gradient(circle at bottom right, rgba(176, 122, 79, 0.14), transparent 25%),
+        linear-gradient(135deg, #f7f2ea 0%, #ead8c1 50%, #f4ead9 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(122, 82, 54, 0.08);
+      filter: blur(12px);
+      z-index: -1;
+    }
+
+    body::before {
+      top: -80px;
+      right: -40px;
+    }
+
+    body::after {
+      bottom: -100px;
+      left: -50px;
+    }
+
+    a,
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .site-shell {
+      width: min(1120px, calc(100% - clamp(20px, 4vw, 36px)));
+      margin: 0 auto;
+      padding: clamp(14px, 2vw, 24px) 0 clamp(28px, 4vw, 40px);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--coffee-dark);
+      color: var(--latte);
+      text-decoration: none;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 16px;
+    }
+
+    .site-header,
+    .site-footer,
+    .panel,
+    .hero-card,
+    .menu-card {
+      backdrop-filter: blur(10px);
+    }
+
+    .site-header,
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 249, 239, 0.82);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(16px, 2vw, 22px);
+      box-shadow: var(--shadow);
+    }
+
+    .site-header {
+      position: sticky;
+      top: 16px;
+      z-index: 20;
+    }
+
+    .site-footer {
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      color: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-kicker,
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      color: var(--coffee-soft);
+    }
+
+    .brand-name,
+    .hero h1,
+    .page-banner h1,
+    .section-heading h2,
+    .panel h2,
+    .menu-card h3 {
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    }
+
+    .brand-name {
+      font-size: clamp(1.2rem, 2vw, 1.45rem);
+      font-weight: 700;
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav-link,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition:
+        transform 0.25s ease,
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+      touch-action: manipulation;
+    }
+
+    .nav-link {
+      color: var(--text-soft);
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible,
+    .nav-link.active {
+      color: var(--coffee-dark);
+      background: rgba(176, 122, 79, 0.12);
+      border-color: rgba(122, 82, 54, 0.18);
+    }
+
+    .brand-mark:focus-visible,
+    .nav-link:focus-visible,
+    .button:focus-visible,
+    .menu-card:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(122, 82, 54, 0.24), var(--shadow);
+    }
+
+    main {
+      padding-top: clamp(18px, 3vw, 28px);
+    }
+
+    .page-view {
+      display: none;
+      outline: none;
+      animation: riseIn 0.7s ease both;
+    }
+
+    .page-view.active {
+      display: block;
+    }
+
+    .panel,
+    .menu-card {
+      background: var(--foam);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: clamp(18px, 3vw, 28px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+      gap: clamp(18px, 2vw, 22px);
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-card {
+      padding: clamp(4px, 1vw, 16px);
+    }
+
+    .hero h1,
+    .page-banner h1 {
+      margin: 10px 0 16px;
+      font-size: clamp(2.25rem, 6vw, 4.5rem);
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    .lead {
+      max-width: 60ch;
+      font-size: clamp(1rem, 1.5vw, 1.08rem);
+      line-height: 1.75;
+      color: var(--text-soft);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      border: 1px solid var(--coffee-mid);
+    }
+
+    .button.primary {
+      background: var(--coffee-dark);
+      color: var(--latte);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--coffee-dark);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+    }
+
+    .hero-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 100%;
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(60, 37, 23, 0.2), rgba(60, 37, 23, 0.82)),
+        linear-gradient(135deg, rgba(176, 122, 79, 0.45), rgba(78, 48, 29, 0.1));
+      color: #fff8ef;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .card-title {
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.74rem;
+    }
+
+    .hero-card h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 3vw, 1.95rem);
+    }
+
+    .story-grid,
+    .values-section,
+    .info-layout,
+    .landmark-grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    .story-grid,
+    .info-layout {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .values-section {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .value-list {
+      margin: 18px 0 0;
+      padding-left: 18px;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .page-banner {
+      margin-bottom: 26px;
+    }
+
+    .menu-section {
+      margin-bottom: 34px;
+    }
+
+    .section-heading {
+      margin-bottom: 16px;
+    }
+
+    .section-heading h2,
+    .panel h2 {
+      margin: 8px 0 0;
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      text-wrap: balance;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .menu-card {
+      position: relative;
+      min-height: 240px;
+      padding: clamp(18px, 2.5vw, 24px);
+      overflow: hidden;
+      outline: none;
+      cursor: default;
+    }
+
+    .menu-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(176, 122, 79, 0.18), transparent 38%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(176, 122, 79, 0.06));
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-front,
+    .menu-description {
+      position: relative;
+      z-index: 1;
+      transition: transform 0.28s ease, opacity 0.28s ease;
+    }
+
+    .menu-front h3 {
+      margin: 0 0 12px;
+      font-size: clamp(1.5rem, 2.6vw, 1.8rem);
+      line-height: 1.08;
+    }
+
+    .price {
+      display: inline-flex;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(60, 37, 23, 0.08);
+      color: var(--coffee-mid);
+      font-weight: 700;
+    }
+
+    .menu-description {
+      position: absolute;
+      inset: auto 24px 24px 24px;
+      margin: 0;
+      line-height: 1.65;
+      color: var(--text-soft);
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .menu-card:hover .menu-front,
+    .menu-card:focus-visible .menu-front {
+      opacity: 0.14;
+      transform: translateY(-10px);
+    }
+
+    .menu-card:hover .menu-description,
+    .menu-card:focus-visible .menu-description {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .menu-card:hover::before,
+    .menu-card:focus-visible::before {
+      opacity: 1;
+    }
+
+    .history-panel,
+    .map-panel {
+      margin-top: 22px;
+    }
+
+    .landmark-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .landmark-grid div {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 249, 239, 0.74);
+      border: 1px solid rgba(60, 37, 23, 0.08);
+    }
+
+    .landmark-label {
+      display: inline-block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: var(--coffee-mid);
+    }
+
+    .contact-stack {
+      display: grid;
+      gap: 8px;
+      font-style: normal;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.7;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .menu-card {
+        min-height: auto;
+      }
+
+      .menu-card::before,
+      .menu-card:hover::before,
+      .menu-card:focus-visible::before {
+        opacity: 0;
+      }
+
+      .menu-front,
+      .menu-card:hover .menu-front,
+      .menu-card:focus-visible .menu-front {
+        opacity: 1;
+        transform: none;
+      }
+
+      .menu-description,
+      .menu-card:hover .menu-description,
+      .menu-card:focus-visible .menu-description {
+        position: static;
+        margin-top: 18px;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .values-section,
+      .landmark-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .site-header,
+      .site-footer {
+        position: static;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .site-nav {
+        width: 100%;
+      }
+
+      .nav-link {
+        flex: 1 1 140px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .story-grid,
+      .values-section,
+      .info-layout,
+      .landmark-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1,
+      .page-banner h1 {
+        line-height: 1.02;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .site-shell {
+        width: min(100% - 20px, 1120px);
+      }
+
+      .site-header,
+      .site-footer,
+      .panel,
+      .menu-card {
+        border-radius: 22px;
+      }
+
+      .site-nav,
+      .hero-actions {
+        width: 100%;
+        gap: 8px;
+      }
+
+      .nav-link,
+      .button {
+        width: 100%;
+      }
+
+      .hero-copy,
+      .hero-card {
+        padding: 4px 0;
+      }
+    }
+
+    @keyframes riseIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  <noscript>
+    <style>
+      .page-view,
+      .page-view[hidden] {
+        display: block !important;
+      }
+    </style>
+  </noscript>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand-mark" href="#home">
+        <span class="brand-kicker">Harbor &amp; Hearth</span>
+        <span class="brand-name">Coffee Roasters</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a class="nav-link active" href="#home" data-page-link="home" aria-current="page">Home</a>
+        <a class="nav-link" href="#menu" data-page-link="menu">Menu</a>
+        <a class="nav-link" href="#info" data-page-link="info">Information</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="page-view active" id="home" data-page="home" tabindex="-1" aria-hidden="false">
+        <section class="hero panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Neighborhood coffee, made with care</p>
+            <h1>A calm corner for bold brews and slow mornings.</h1>
+            <p class="lead">
+              Harbor &amp; Hearth Coffee is a welcoming coffee shop where handcrafted drinks,
+              fresh pastries, and good conversations all share the same table.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#menu">Explore the Menu</a>
+              <a class="button secondary" href="#info">Visit the Shop</a>
+            </div>
+          </div>
+          <div class="hero-card">
+            <p class="card-title">House Favorite</p>
+            <h2>Maple Sea Salt Latte</h2>
+            <p>
+              Espresso, velvety milk, maple syrup, and a whisper of sea salt for a
+              smooth and comforting cup.
+            </p>
+          </div>
+        </section>
+
+        <section class="story-grid">
+          <article class="panel">
+            <p class="eyebrow">Our Story</p>
+            <h2>Why we opened our doors</h2>
+            <p>
+              We started Harbor &amp; Hearth to create a place where students, workers,
+              families, and friends could pause, recharge, and feel at home.
+            </p>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">What we serve</p>
+            <h2>Seasonal coffee and handmade food</h2>
+            <p>
+              Our menu blends classic espresso drinks, signature seasonal flavors,
+              teas, and baked treats prepared to pair naturally with every cup.
+            </p>
+          </article>
+        </section>
+
+        <section class="values-section">
+          <article class="panel value-card">
+            <p class="eyebrow">Mission</p>
+            <h2>To serve memorable coffee and meaningful hospitality.</h2>
+            <p>
+              Every drink is prepared with attention, every guest is welcomed warmly,
+              and every visit is meant to feel thoughtful from start to finish.
+            </p>
+          </article>
+
+          <article class="panel value-card">
+            <p class="eyebrow">Vision</p>
+            <h2>To become the community's favorite place to gather and grow.</h2>
+            <p>
+              We aim to be more than a coffee stop by becoming a steady, inspiring
+              space for connection, creativity, and local pride.
+            </p>
+          </article>
+
+          <article class="panel value-card">
+            <p class="eyebrow">Core Values</p>
+            <ul class="value-list">
+              <li>Craft in every cup</li>
+              <li>Warm, respectful service</li>
+              <li>Community-first atmosphere</li>
+              <li>Fresh ingredients and honest sourcing</li>
+            </ul>
+          </article>
+        </section>
+      </section>
+
+      <section class="page-view" id="menu" data-page="menu" tabindex="-1" aria-hidden="true" hidden>
+        <section class="page-banner panel">
+          <p class="eyebrow">Menu</p>
+          <h1>Signature drinks, cozy classics, and bakery favorites.</h1>
+          <p class="lead">
+            On desktops, hover on a menu item to reveal its description. On phones and tablets,
+            descriptions stay visible automatically for easier browsing.
+          </p>
+        </section>
+
+        <section class="menu-section">
+          <div class="section-heading">
+            <p class="eyebrow">Coffee Bar</p>
+            <h2>Espresso &amp; Signature Drinks</h2>
+          </div>
+
+          <div class="menu-grid">
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Maple Sea Salt Latte</h3>
+                <p class="price">$5.50</p>
+              </div>
+              <p class="menu-description">
+                Smooth espresso with steamed milk, maple syrup, and a light sea salt finish.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Brown Sugar Cold Brew</h3>
+                <p class="price">$5.00</p>
+              </div>
+              <p class="menu-description">
+                Slow-steeped cold brew sweetened with brown sugar and topped with cream.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Classic Cappuccino</h3>
+                <p class="price">$4.50</p>
+              </div>
+              <p class="menu-description">
+                A balanced shot of espresso finished with silky milk foam and cocoa dust.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Mocha Ember</h3>
+                <p class="price">$5.75</p>
+              </div>
+              <p class="menu-description">
+                Dark chocolate, espresso, and steamed milk with a subtle cinnamon warmth.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="menu-section">
+          <div class="section-heading">
+            <p class="eyebrow">Beyond Coffee</p>
+            <h2>Tea &amp; Refreshers</h2>
+          </div>
+
+          <div class="menu-grid">
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Honey Citrus Tea</h3>
+                <p class="price">$4.25</p>
+              </div>
+              <p class="menu-description">
+                Fragrant black tea, lemon, and honey for a bright and soothing drink.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Iced Hibiscus Bloom</h3>
+                <p class="price">$4.75</p>
+              </div>
+              <p class="menu-description">
+                Floral hibiscus tea shaken cold with berries and a touch of cane sugar.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Vanilla Cream Matcha</h3>
+                <p class="price">$5.25</p>
+              </div>
+              <p class="menu-description">
+                Earthy matcha whisked smooth and finished with lightly sweet vanilla cream.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="menu-section">
+          <div class="section-heading">
+            <p class="eyebrow">Bakery</p>
+            <h2>Fresh Pairings</h2>
+          </div>
+
+          <div class="menu-grid">
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Butter Croissant</h3>
+                <p class="price">$3.50</p>
+              </div>
+              <p class="menu-description">
+                Flaky, golden pastry baked fresh each morning with rich butter layers.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Blueberry Scone</h3>
+                <p class="price">$3.75</p>
+              </div>
+              <p class="menu-description">
+                Tender scone packed with blueberries and finished with a light sugar glaze.
+              </p>
+            </article>
+
+            <article class="menu-card panel" tabindex="0">
+              <div class="menu-front">
+                <h3>Smoked Ham Panini</h3>
+                <p class="price">$6.95</p>
+              </div>
+              <p class="menu-description">
+                Toasted artisan bread filled with smoked ham, cheese, and herb butter.
+              </p>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section class="page-view" id="info" data-page="info" tabindex="-1" aria-hidden="true" hidden>
+        <section class="page-banner panel">
+          <p class="eyebrow">Information</p>
+          <h1>Everything you need to plan your visit.</h1>
+          <p class="lead">
+            Drop by for a quiet morning, an afternoon catch-up, or your everyday coffee routine.
+          </p>
+        </section>
+
+        <section class="info-layout">
+          <article class="panel">
+            <p class="eyebrow">Location</p>
+            <h2>Visit us</h2>
+            <address class="contact-stack">
+              <span>125 Harbor Lane, Seaview District, Bay City</span>
+              <span>Open daily from 7:00 AM to 8:00 PM</span>
+            </address>
+          </article>
+
+          <article class="panel">
+            <p class="eyebrow">Contact</p>
+            <h2>Get in touch</h2>
+            <address class="contact-stack">
+              <span>Phone: +1 (555) 472-2424</span>
+              <span>Email: hello@harborandhearthcoffee.com</span>
+              <span>Instagram: @harborandhearthcoffee</span>
+            </address>
+          </article>
+        </section>
+
+        <section class="panel history-panel">
+          <p class="eyebrow">History</p>
+          <h2>From a weekend pop-up to a neighborhood favorite</h2>
+          <p>
+            Harbor &amp; Hearth began as a small weekend cart serving pour-over coffee at
+            local community events. As our customer family grew, so did the dream of
+            creating a permanent space that felt warm, creative, and grounded.
+          </p>
+          <p>
+            Today, the shop continues that same spirit by supporting local bakers,
+            hosting small gatherings, and serving every guest like a regular.
+          </p>
+        </section>
+
+        <section class="panel map-panel">
+          <p class="eyebrow">Nearby Landmarks</p>
+          <h2>Easy to find, easy to love</h2>
+          <div class="landmark-grid">
+            <div>
+              <span class="landmark-label">2 mins</span>
+              <p>From Seaview Public Library</p>
+            </div>
+            <div>
+              <span class="landmark-label">5 mins</span>
+              <p>From Bay City Central Park</p>
+            </div>
+            <div>
+              <span class="landmark-label">8 mins</span>
+              <p>From Harbor Transit Station</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Harbor &amp; Hearth Coffee Roasters</p>
+      <p>Fresh brews. Shared stories. Everyday comfort.</p>
+    </footer>
+  </div>
+
+  <script>
+    const pageViews = document.querySelectorAll("[data-page]");
+    const pageLinks = document.querySelectorAll("[data-page-link]");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let hasInitialized = false;
+
+    function showPageFromHash(shouldFocus) {
+      const pageName = (window.location.hash || "#home").replace("#", "");
+      const activePage = document.querySelector('[data-page="' + pageName + '"]') || document.querySelector('[data-page="home"]');
+      const activeName = activePage.getAttribute("data-page");
+
+      pageViews.forEach((page) => {
+        const isActive = page === activePage;
+        page.classList.toggle("active", isActive);
+        page.hidden = !isActive;
+        page.setAttribute("aria-hidden", String(!isActive));
+      });
+
+      pageLinks.forEach((link) => {
+        const isCurrent = link.getAttribute("data-page-link") === activeName;
+        link.classList.toggle("active", isCurrent);
+
+        if (isCurrent) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      const titleMap = {
+        home: "Harbor & Hearth Coffee",
+        menu: "Menu | Harbor & Hearth Coffee",
+        info: "Information | Harbor & Hearth Coffee"
+      };
+
+      document.title = titleMap[activeName] || titleMap.home;
+
+      if (shouldFocus) {
+        activePage.focus({ preventScroll: true });
+      }
+
+      if (hasInitialized) {
+        if (prefersReducedMotion.matches) {
+          window.scrollTo(0, 0);
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+    }
+
+    if (!window.location.hash) {
+      window.history.replaceState(null, "", "#home");
+    }
+
+    showPageFromHash(false);
+    hasInitialized = true;
+
+    window.addEventListener("hashchange", () => {
+      showPageFromHash(true);
+    });
+  </script>
+</body>
+</html>
