@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Mik's Coffee Shop</title>
+    <!-- Professional & Aesthetic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* MATCHED PALETTE FROM INDEX */
+            --primary-brown: #c2ae8e; 
+            --light-tan: #f2ede4;     
+            --off-white: #faf9f6;     
+            --dark-coffee: #2c241a;   
+            --nav-bg-solid: #a68d6d;  
+            
+            --transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --pop-transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --grain-pattern: url('https://www.transparenttextures.com/patterns/p6.png');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-tan);
+            color: var(--dark-coffee);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .container { width: 90%; max-width: 1400px; margin: 0 auto; position: relative; }
+
+        /* EMPHASIZED TITLES */
+        h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 4px; font-size: clamp(50px, 10vw, 100px); }
+        h2 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 3px; font-size: clamp(35px, 5vw, 65px); line-height: 1.1; margin-bottom: 20px;}
+        
+        .accent-font { font-family: 'Dancing Script', cursive; text-transform: none; color: var(--dark-coffee); font-size: clamp(24px, 3vw, 36px); opacity: 0.9; display: block; margin-bottom: 10px; }
+
+        .reveal { opacity: 0; transform: translateY(60px) scale(0.95); transition: var(--pop-transition); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background-color: var(--nav-bg-solid);
+            transition: var(--transition-smooth); opacity: 0; transform: translateY(-50px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        nav.loaded { opacity: 1; transform: translateY(0); }
+        
+        .nav-inner { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 1.8rem 5%;
+            transition: var(--transition-smooth);
+        }
+
+        nav.scrolled { 
+            background-color: #8e7a5d; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        nav.scrolled .nav-inner { padding: 0.8rem 5%; }
+
+        .logo { font-size: clamp(20px, 2.5vw, 30px); font-weight: 700; color: white; font-family: 'Playfair Display', serif; text-decoration: none; }
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 600; font-size: 0.95rem; letter-spacing: 2px; }
+        .active-link { border-bottom: 2px solid white; padding-bottom: 5px; }
+
+        /* --- HERO SECTION --- */
+        .about-hero {
+            position: relative;
+            height: 60vh;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center; color: white; overflow: hidden;
+            background-color: #1a1a1a;
+        }
+        
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            /* REPLACE 'about-hero.jpg' WITH YOUR IMAGE */
+            background: linear-gradient(rgba(44, 36, 26, 0.4), rgba(44, 36, 26, 0.4)), 
+                        url('about-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 0;
+            transform: scale(1.1);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+        .hero-bg.ready { opacity: 1; transform: scale(1); }
+
+        /* --- CONTENT SECTIONS --- */
+        .section-padding { padding: 10rem 0; }
+
+        /* History: Centered Text */
+        .history-section { background-color: var(--light-tan); text-align: center; }
+        .history-section p { font-size: clamp(16px, 1.2vw, 19px); line-height: 1.8; margin-top: 1.5rem; max-width: 1000px; margin-left: auto; margin-right: auto; text-transform: none; }
+
+        /* Mission & Vision: Split Flex */
+        .mission-section { background-color: var(--off-white); background-image: var(--grain-pattern); }
+        .vision-section { background-color: var(--primary-brown); color: white; }
+
+        .split-flex { display: flex; align-items: center; gap: 4rem; flex-wrap: wrap; }
+        .side-image { 
+            flex: 1; min-width: 400px; height: clamp(400px, 50vh, 600px); 
+            border-radius: 25px; overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
+            background-color: var(--primary-brown);
+        }
+        .side-image img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .side-content { flex: 1; min-width: 400px; }
+        .side-content p { font-size: clamp(16px, 1.2vw, 18px); line-height: 1.7; text-transform: none; margin-bottom: 1.5rem; }
+
+        /* FOOTER */
+        footer { background-color: var(--dark-coffee); color: var(--light-tan); padding: 3rem 0; text-align: center; }
+        footer p { font-size: 0.9rem; letter-spacing: 1px; opacity: 0.8; text-transform: none; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">Mik's Coffee Shop</a>
+            <ul class="nav-links">
+                <li><a href="#">FRANCHISE</a></li>
+                <li><a href="about.html" class="active-link">ABOUT US</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="about-hero">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="container reveal" id="hero-reveal">
+            <span class="accent-font" style="color: white;">Crafting Moments</span>
+            <h1>Our Story</h1>
+        </div>
+    </section>
+
+    <!-- 1. HISTORY -->
+    <section class="section-padding history-section">
+        <div class="container reveal">
+            <span class="accent-font">The Journey</span>
+            <h2>History of Miks Coffee Shop (MCS)</h2>
+            <p>Miks Coffee Shop got it's name from the owner, Marichris Lebrilla, who is also known as Kim. The name was created from a simple but meaningful idea, when the name "Kim" is reversed, it becomes "Mik". From this, the name Miks Coffee Shop was formed.</p>
+            
+            <p>The word Miks also represents "mix", which reflects the variety of food and drinks that the coffee shop offers to its customers. It symbolizes creativity and the combination of different flavors that make the menu unique and enjoyable.</p>
+            
+            <p>However, the purpose of starting Miks Coffee Shop was not mainly to earn money. The owner, Marichris Lebrilla, created this business out of her passion for helping and giving opportunities to others. The idea of building the coffee shop was inspired by her desire to support others and create a place where people could work together and grow.</p>
+            
+            <p>Even without complete resources at the start, the passion, dedication and heart behind Miks Coffee Shop helped it begin serving customers and continue growing over time.</p>
+        </div>
+    </section>
+
+    <!-- 2. MISSION (Image Left) -->
+    <section class="section-padding mission-section">
+        <div class="container split-flex">
+            <div class="side-image reveal">
+                <!-- REPLACE 'mission.jpg' WITH YOUR IMAGE -->
+                <img src="mission.jpg" alt="Our Mission">
+            </div>
+            <div class="side-content reveal" style="transition-delay: 0.2s;">
+                <span class="accent-font">Our Purpose</span>
+                <h2>Mission</h2>
+                <p>The mission of Mik's Coffee Shop is to provide quality coffee, delicious food, and refreshing drinks while creating a warm and welcoming place for everyone. The coffee shop aims to bring people together and offer a variety of flavors that customers can enjoy.</p>
+                <p>Mik's Coffee Shop is also committed to helping others by providing opportunities for the community. Through passion, dedication, and service, the business strives to create not only good products at an affordable price so that more people can enjoy great coffee and food while supporting a business that values people and community.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. VISION (Image Right) -->
+    <section class="section-padding vision-section">
+        <div class="container split-flex" style="flex-direction: row-reverse;">
+            <div class="side-image reveal">
+                <!-- REPLACE 'vision.jpg' WITH YOUR IMAGE -->
+                <img src="vision.jpg" alt="Our Vision">
+            </div>
+            <div class="side-content reveal" style="transition-delay: 0.2s;">
+                <span class="accent-font" style="color: white;">Our Aspiration</span>
+                <h2 style="color: white;">Vision</h2>
+                <p style="opacity: 0.9;">The vision of Mik's Coffee Shop is to become a well-loved coffee shop known for its quality coffee, delicious food, and affordable prices. It aims to be a place where people feel comfortable, welcomed, and connected with one another.</p>
+                <p style="opacity: 0.9;">Mik's Coffee Shop also envisions growing as a business that continues to create opportunities to the community while serving customers with passion, dedication and excellent service.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container"><p>© 2025 Mik's Coffee Shop. All rights reserved.</p></div>
+    </footer>
+
+    <script>
+        // Entrance Animations
+        window.addEventListener('load', () => {
+            const nav = document.getElementById('navbar');
+            const heroContent = document.getElementById('hero-reveal');
+            const heroBg = document.getElementById('hero-bg');
+            
+            nav.classList.add('loaded');
+            heroBg.classList.add('ready');
+            
+            setTimeout(() => {
+                heroContent.classList.add('active');
+            }, 400);
+        });
+
+        // Scroll Reveal Interaction
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Navigation Styling on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 80) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>

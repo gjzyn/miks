@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mik's Coffee Shop | Premium Brews</title>
+    <!-- Professional & Aesthetic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* REFINED PALETTE */
+            --primary-brown: #a68d6d; /* Darker, richer brown */
+            --light-tan: #f2ede4;     
+            --off-white: #faf9f6;     
+            --dark-coffee: #2c241a;   /* Deep espresso for text */
+            --nav-bg-solid: #a68d6d;  /* Darker brown for nav */
+            
+            --transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --pop-transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --grain-pattern: url('https://www.transparenttextures.com/patterns/p6.png');
+            --content-width: 1300px; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-tan);
+            color: var(--dark-coffee);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .container { width: 90%; max-width: 1400px; margin: 0 auto; position: relative; }
+
+        /* EMPHASIZED TITLES */
+        h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 4px; font-size: clamp(50px, 10vw, 120px); }
+        h2 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 3px; font-size: clamp(40px, 6vw, 85px); line-height: 1.1; }
+        h3 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 2px; font-size: clamp(25px, 3vw, 40px); }
+
+        .accent-font { font-family: 'Dancing Script', cursive; text-transform: none; color: var(--dark-coffee); font-size: clamp(24px, 3vw, 36px); opacity: 0.9; display: block; margin-bottom: 10px; }
+
+        .reveal { opacity: 0; transform: translateY(60px) scale(0.95); transition: var(--pop-transition); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* --- NAVIGATION: Darker and Dynamic sizing --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background-color: var(--nav-bg-solid); /* Solid darker brown */
+            transition: var(--transition-smooth); opacity: 0; transform: translateY(-50px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        nav.loaded { opacity: 1; transform: translateY(0); }
+        
+        .nav-inner { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 1.8rem 5%; /* Initial Size */
+            transition: var(--transition-smooth);
+        }
+
+        /* Scrolled state: Darker and Smaller */
+        nav.scrolled { 
+            background-color: #8e7a5d; /* Slightly deeper brown when sticky */
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        nav.scrolled .nav-inner { 
+            padding: 0.8rem 5%; /* Smaller Padding for Stick Mode */
+        }
+
+        .logo { font-size: clamp(20px, 2.5vw, 30px); font-weight: 700; color: white; font-family: 'Playfair Display', serif; text-decoration: none; }
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px; transition: opacity 0.3s; }
+        .nav-links a:hover { opacity: 0.7; }
+
+        /* --- HERO --- */
+        .hero { position: relative; height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; color: white; overflow: hidden; background-color: #1a1a1a; }
+        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: brightness(0.5); opacity: 0; transform: scale(1.1); transition: 1.5s; }
+        #bg-video.ready { opacity: 1; transform: scale(1); }
+        .hero p { font-size: clamp(16px, 2vw, 24px); font-weight: 300; font-style: italic; margin-top: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        
+        .scroll-down-arrow { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); font-size: 32px; color: white; animation: bounce 2s infinite; opacity: 0; transition: 1s ease 1s; }
+        .scroll-down-arrow.loaded { opacity: 1; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -10px); } 60% { transform: translate(-50%, -5px); } }
+
+        /* --- DESCRIPTION --- */
+        .description-section { padding: 10rem 0; background-color: var(--off-white); background-image: var(--grain-pattern); text-align: center; }
+        .desc-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; margin-top: 6rem; }
+        .desc-card { 
+            width: clamp(300px, 25vw, 420px); 
+            height: clamp(450px, 40vh, 580px); 
+            position: relative; border-radius: 15px; overflow: hidden; 
+            background-size: cover; background-position: center; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06); 
+            background-color: var(--primary-brown); 
+        }
+        .info-box { position: absolute; bottom: 0; left: 0; width: 100%; height: 22%; background-color: var(--primary-brown); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: var(--transition-smooth); color: white; }
+        .info-box h3 { font-size: 1.5rem; margin: 0; transition: var(--transition-smooth); }
+        .desc-text { font-size: 1rem; line-height: 1.6; opacity: 0; max-height: 0; transition: var(--transition-smooth); pointer-events: none; text-transform: none; padding: 0 15px; }
+        .desc-card:hover .info-box { height: 100%; background-color: rgba(44, 36, 26, 0.85); justify-content: center; }
+        .desc-card:hover .desc-text { opacity: 1; max-height: 250px; margin-top: 20px; pointer-events: auto; }
+
+        /* --- BEST SELLERS --- */
+        .best-sellers { height: 110vh; min-height: 800px; background-color: var(--primary-brown); overflow: hidden; }
+        .bs-flex { display: flex; align-items: center; height: 100%; flex-wrap: wrap; }
+        .bs-text { flex: 1; z-index: 20; min-width: 350px; color: white; }
+        .bs-text p { font-size: 1.2rem; margin-top: 20px; text-transform: none; opacity: 0.9; }
+        .bs-visuals { flex: 1.5; height: 100%; position: relative; display: flex; justify-content: center; align-items: center; min-width: 450px; }
+        .bs-item { position: absolute; border-radius: 50%; background-size: cover; background-position: center; transition: var(--transition-smooth); cursor: pointer; box-shadow: 0 30px 60px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; }
+        
+        .bs-item.top { width: 22vw; height: 22vw; max-width: 350px; max-height: 350px; transform: translateY(-60%); opacity: 0.5; z-index: 5; pointer-events: auto; }
+        .bs-item.mid { width: 38vw; height: 38vw; max-width: 600px; max-height: 600px; transform: translateY(0); opacity: 1; z-index: 10; border: 15px solid var(--off-white); }
+        .bs-item.bot { width: 22vw; height: 22vw; max-width: 350px; max-height: 350px; transform: translateY(60%); opacity: 0.5; z-index: 5; pointer-events: auto; }
+
+        /* --- RATINGS: Infinite Marquee --- */
+        .customer-love { padding: 10rem 0; background-color: var(--light-tan); background-image: var(--grain-pattern); overflow: hidden; text-align: center; }
+        .marquee-wrapper { margin-top: 6rem; width: 100%; display: flex; overflow: hidden; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+        .marquee-content { display: flex; gap: 3rem; padding: 2rem 0; animation: infinite-scroll 55s linear infinite; }
+        .review-bubble { flex-shrink: 0; width: 450px; background-color: var(--primary-brown); padding: 3rem; border-radius: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition-smooth); text-align: left; color: white; }
+        .review-bubble:hover { transform: scale(1.05); background-color: var(--dark-coffee); }
+        .review-bubble .name { font-weight: 600; font-size: 14px; letter-spacing: 2px; display: block; margin-bottom: 12px; opacity: 0.8; }
+        .review-bubble p { font-size: 18px; line-height: 1.6; font-style: italic; margin-bottom: 0; text-transform: none; }
+
+        @keyframes infinite-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        footer { background-color: var(--dark-coffee); color: var(--light-tan); padding: 4rem 0; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">Mik's Coffee Shop</a>
+            <ul class="nav-links">
+                <li><a href="#">FRANCHISE</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <!-- REPLACE 'hero-bg.mp4' WITH YOUR OWN VIDEO FILE -->
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="hero-bg.mp4" type="video/mp4">
+        </video>
+        <div class="container reveal" id="hero-reveal">
+            <span class="accent-font" style="color: white;">Since 2024</span>
+            <h1>Mik's Coffee Shop</h1>
+            <p>"Elevating your daily ritual, one bean at a time."</p>
+        </div>
+        <div class="scroll-down-arrow" id="hero-arrow">▼</div>
+    </section>
+
+    <!-- DESCRIPTION SECTION -->
+    <section class="description-section">
+        <div class="container">
+            <span class="accent-font">Our Philosophy</span>
+            <h2 class="section-title reveal">Experience Excellence</h2>
+            <div class="desc-container">
+                <!-- REPLACE 'image1.jpg' WITH YOUR OWN IMAGE FILE -->
+                <div class="desc-card reveal" style="background-image: url('image1.jpg');">
+                    <div class="info-box"><h3>Premium Beans</h3><p class="desc-text">Describe your beans here. Focus on the origin, roast, and taste profile.</p></div>
+                </div>
+                <!-- REPLACE 'image2.jpg' WITH YOUR OWN IMAGE FILE -->
+                <div class="desc-card reveal" style="background-image: url('image2.jpg'); transition-delay: 0.1s;">
+                    <div class="info-box"><h3>Fresh Kitchen</h3><p class="desc-text">Describe your food quality. Mention daily baking or fresh local ingredients.</p></div>
+                </div>
+                <!-- REPLACE 'image3.jpg' WITH YOUR OWN IMAGE FILE -->
+                <div class="desc-card reveal" style="background-image: url('image3.jpg'); transition-delay: 0.2s;">
+                    <div class="info-box"><h3>Service First</h3><p class="desc-text">Talk about your staff or the atmosphere. Emphasize customer comfort.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEST SELLERS SECTION -->
+    <section class="best-sellers">
+        <div class="container bs-flex">
+            <div class="bs-text reveal">
+                <span class="accent-font" style="color: white;">The Crowd Favorites</span>
+                <h2>Best Sellers</h2>
+                <p>Highlight your most popular drinks or signature blends that your customers love most.</p>
+            </div>
+            <div class="bs-visuals reveal" id="carousel">
+                <!-- REPLACE THE FILENAMES BELOW WITH YOUR PRODUCT IMAGES -->
+                <div class="bs-item" style="background-image: url('product1.jpg')"></div>
+                <div class="bs-item" style="background-image: url('product2.jpg')"></div>
+                <div class="bs-item" style="background-image: url('product3.jpg')"></div>
+                <div class="bs-item" style="background-image: url('product4.jpg')"></div>
+                <div class="bs-item" style="background-image: url('product5.jpg')"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RATINGS SECTION -->
+    <section class="customer-love">
+        <div class="container">
+            <span class="accent-font">Our Community</span>
+            <h2 class="reveal">Customer Love</h2>
+            
+            <div class="marquee-wrapper">
+                <div class="marquee-content">
+                    <!-- ADD YOUR CUSTOMER REVIEWS BELOW -->
+                    <div class="review-bubble"><span class="name">Anonymous</span><p>"Thank you! Super Sarap nya lalo"</p></div>
+                    <div class="review-bubble"><span class="name">Aaron A.</span><p>"We visited your cafe and really loved the vibe"</p></div>
+                    <div class="review-bubble"><span class="name">Anonymous</span><p>"Thank you! Sarap ng food nagustuhan din ng kapatid at mama ko po"</p></div>
+                    <div class="review-bubble"><span class="name">Anonymous</span><p>"Masarap yung chicken favorite ng kapatid ko yung Garlic Parmesan"</p></div>
+                    
+                    <!-- Duplicated set for seamless loop (Keep these exactly the same as above) -->
+                    <div class="review-bubble"><span class="name">Anonymous</span><p>"Thank you! Super Sarap nya lalo"</p></div>
+                    <div class="review-bubble"><span class="name">Anonymous</span><p>"Masarap yung chicken favorite ng kapatid ko yung Garlic Parmesan"</p></div>
+                    <div class="review-bubble"><span class="name">Aaron A.</span><p>"We visited your cafe and really loved the vibe"</p></div>
+                    <div class="review-bubble"><span class="name">Anonymous</span><p>"Thank you! Sarap ng food nagustuhan din ng kapatid at mama ko po"</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container"><p>© 2025 Mik's Coffee Shop. All rights reserved.</p></div>
+    </footer>
+
+    <script>
+        const heroVideo = document.getElementById('bg-video');
+        heroVideo.oncanplay = function() { heroVideo.classList.add('ready'); };
+        window.addEventListener('load', () => {
+            const nav = document.getElementById('navbar');
+            nav.classList.add('loaded');
+            if (heroVideo.readyState >= 3) heroVideo.classList.add('ready');
+            setTimeout(() => {
+                document.getElementById('hero-reveal').classList.add('active');
+                document.getElementById('hero-arrow').classList.add('loaded');
+            }, 400);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 80) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        const items = document.querySelectorAll('.bs-item');
+        let midIndex = 1;
+        function updateCarousel() {
+            items.forEach((item, index) => {
+                item.className = 'bs-item'; item.onclick = null;
+                const len = items.length;
+                const t = (midIndex - 1 + len) % len, m = midIndex % len, b = (midIndex + 1) % len;
+                if (index === t) { item.classList.add('top'); item.onclick = () => move('down'); }
+                else if (index === m) item.classList.add('mid');
+                else if (index === b) { item.classList.add('bot'); item.onclick = () => move('up'); }
+            });
+        }
+        function move(dir) { midIndex = (dir === 'up') ? (midIndex + 1) % items.length : (midIndex - 1 + items.length) % items.length; updateCarousel(); }
+        updateCarousel();
+    </script>
+</body>
+</html>
