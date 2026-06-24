@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Mik's Coffee Shop</title>
+    <!-- Professional & Aesthetic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-brown: #c2ae8e; 
+            --light-tan: #f2ede4;     
+            --off-white: #faf9f6;     
+            --dark-coffee: #2c241a;   
+            --nav-bg: rgba(166, 141, 109, 0.8);
+            --transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --pop-transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --grain-pattern: url('https://www.transparenttextures.com/patterns/p6.png');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--light-tan); 
+            color: var(--dark-coffee); 
+            overflow-x: hidden; 
+            width: 100%; 
+            /* FIXED: min-width: 1400px REMOVED */
+        }
+
+        .container { 
+            width: 90%; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            position: relative; 
+        }
+
+        h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 2px; font-size: clamp(2.5rem, 7vw, 5.5rem); }
+        h2 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 1px; font-size: clamp(1.8rem, 4.5vw, 3.2rem); line-height: 1.1; margin-bottom: 1.5rem; }
+        .accent-font { font-family: 'Dancing Script', cursive; text-transform: none; color: var(--dark-coffee); font-size: clamp(1.2rem, 2vw, 1.8rem); opacity: 0.9; display: block; margin-bottom: 10px; }
+
+        .reveal { opacity: 0; transform: translateY(60px); transition: var(--pop-transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            background-color: var(--nav-bg);
+            transition: var(--transition-smooth); 
+            opacity: 0; transform: translateY(-50px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        nav.loaded { opacity: 1; transform: translateY(0); }
+        nav.scrolled { background-color: #8e7a5d; }
+        
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; transition: var(--transition-smooth); }
+        nav.scrolled .nav-inner { padding: 0.8rem 5%; }
+
+        .logo { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 700; color: white; font-family: 'Playfair Display', serif; text-decoration: none; z-index: 1100; }
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1100; }
+        .menu-toggle span { width: 25px; height: 3px; background: white; transition: 0.3s; }
+
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; }
+        .active-link { border-bottom: 2px solid white; padding-bottom: 5px; }
+
+        /* --- HERO --- */
+        .about-hero { 
+            height: 60vh; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            text-align: center; 
+            overflow: hidden; 
+            background-color: #1a1a1a; 
+        }
+        .hero-bg { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('about-hero.jpg') center/cover; 
+            opacity: 0; transform: scale(1.1); transition: 1.5s; z-index: -1; 
+        }
+        .hero-bg.ready { opacity: 1; transform: scale(1); }
+
+        /* --- CONTENT SECTIONS --- */
+        .section { padding: 8rem 0; width: 100%; }
+        .history-section { text-align: center; background-color: var(--light-tan); }
+        .history-section p { max-width: 1000px; margin: 2rem auto 0; line-height: 1.8; font-size: 1.1rem; }
+
+        .split-flex { display: flex; align-items: center; gap: 4rem; flex-wrap: wrap; }
+        
+        /* --- ROLLING IMAGE STYLES --- */
+        .side-image-container { 
+            flex: 1; 
+            height: 500px; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+            min-width: 300px;
+            position: relative;
+            background-color: var(--primary-brown);
+        }
+
+        .rolling-track {
+            display: flex;
+            width: max-content;
+            height: 100%;
+            animation: rolling-images 30s linear infinite;
+        }
+
+        .vision-section .rolling-track {
+            animation-duration: 25s;
+        }
+
+        .rolling-track img {
+            width: 610px; 
+            height: 500px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        @keyframes rolling-images {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); } 
+        }
+
+        .side-text { flex: 1; min-width: 300px; }
+
+        footer { background: var(--dark-coffee); color: white; padding: 2.5rem 0; text-align: center; font-size: 0.8rem; }
+
+        @media (max-width: 767px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; 
+                background: #8e7a5d; flex-direction: column; 
+                padding: 2.5rem; gap: 2rem; transform: translateY(-150%); 
+                opacity: 0; pointer-events: none; transition: 0.4s ease-in;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            }
+            .nav-links.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+            
+            .section { padding: 4rem 0; }
+            .split-flex { flex-direction: column !important; text-align: center !important; }
+            .side-image-container { width: 100%; height: 350px; }
+            .rolling-track img { width: 100vw; height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">Mik's Coffee Shop</a>
+            <div class="menu-toggle" id="mobile-menu"><span></span><span></span><span></span></div>
+            <ul class="nav-links" id="nav-list">
+                <li><a href="franchise.html">FRANCHISE</a></li>
+                <li><a href="about.html" class="active-link">ABOUT US</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="about-hero">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="container reveal">
+            <span class="accent-font" style="color: white;">Crafting Moments</span>
+            <h1>Our Story</h1>
+        </div>
+    </header>
+
+    <!-- 1. HISTORY -->
+    <section class="section history-section">
+        <div class="container reveal">
+            <span class="accent-font">The Journey</span>
+            <h2>History of Miks Coffee Shop (MCS)</h2>
+            <p>Miks Coffee Shop got its name from the owner, Marichris Lebrilla, who is also known as Kim. The name was created from a simple but meaningful idea: when the name "Kim" is reversed, it becomes "Mik". From this, the name Miks Coffee Shop was formed.</p>
+            <p style="margin-top: 1.5rem;">The word Miks also represents "mix", which reflects the variety of food and drinks that the coffee shop offers to its customers. It symbolizes creativity and the combination of different flavors that make the menu unique and enjoyable. Marichris Lebrilla created this business out of her passion for helping and giving opportunities to others, creating a place where people could work together and grow.</p>
+            <p style="margin-top: 1.5rem;">Even without complete resources at the start, the passion, dedication and heart behind Miks Coffee Shop helped it begin serving customers and continue growing over time.</p>
+        </div>
+    </section>
+
+    <!-- 2. MISSION -->
+    <section class="section mission-section" style="background: var(--off-white); background-image: var(--grain-pattern);">
+        <div class="container split-flex">
+            <div class="side-image-container reveal">
+                <div class="rolling-track">
+                    <img src="p1.jpg" alt="Mission 1">
+                    <img src="p3.jpeg" alt="Mission 2">
+                    <img src="p5.jpeg" alt="Mission 3">
+                    <img src="p1.jpg" alt="Mission 1">
+                    <img src="p3.jpeg" alt="Mission 2">
+                    <img src="p5.jpeg" alt="Mission 3">
+                </div>
+            </div>
+            <div class="side-text reveal">
+                <span class="accent-font">Our Purpose</span>
+                <h2>Mission of Miks Coffee Shop</h2>
+                <p>The mission of Mik's Coffee Shop is to provide quality coffee, delicious food, and refreshing drinks while creating a warm and welcoming place for everyone. The coffee shop aims to bring people together and offer a variety of flavors that customers can enjoy.</p>
+                <p style="margin-top: 1rem;">Mik's Coffee Shop is also committed to helping others by providing opportunities for the community. Through passion, dedication, and service, the business strives to create not only good products at an affordable price so that more people can enjoy great coffee and food while supporting a business that values people and community.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. VISION -->
+    <section class="section vision-section" style="background: var(--primary-brown); color: white;">
+        <div class="container split-flex" style="flex-direction: row-reverse;">
+            <div class="side-image-container reveal">
+                <div class="rolling-track">
+                    <img src="p2.jpg" alt="Vision 1">
+                    <img src="p4.jpeg" alt="Vision 2">
+                    <img src="p6.jpeg" alt="Vision 3">
+                    <img src="p2.jpg" alt="Vision 1">
+                    <img src="p4.jpeg" alt="Vision 2">
+                    <img src="p6.jpeg" alt="Vision 3">
+                </div>
+            </div>
+            <div class="side-text reveal">
+                <span class="accent-font" style="color: white;">Our Aspiration</span>
+                <h2 style="color: white;">Vision of Miks Coffee Shop</h2>
+                <p>The vision of Mik's Coffee Shop is to become a well-loved coffee shop known for its quality coffee, delicious food, and affordable prices. It aims to be a place where people feel comfortable, welcomed, and connected with one another.</p>
+                <p style="margin-top: 1rem; opacity: 0.9;">Mik's Coffee Shop also envisions growing as a business that continues to create opportunities for the community while serving customers with passion, dedication, and excellent service.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>© 2025 Mik's Coffee Shop. All rights reserved.</p></footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            document.getElementById('navbar').classList.add('loaded');
+            document.getElementById('hero-bg').classList.add('ready');
+        });
+
+        const menuBtn = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+        menuBtn.onclick = () => navList.classList.toggle('active');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            window.scrollY > 80 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>

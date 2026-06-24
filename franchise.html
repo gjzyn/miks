@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franchise & Events | Mik's Coffee Shop</title>
+    <!-- Professional & Aesthetic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* MATCHED PALETTE */
+            --primary-brown: #c2ae8e; 
+            --light-tan: #f2ede4;     
+            --off-white: #faf9f6;     
+            --dark-coffee: #2c241a;   
+            --nav-bg: rgba(166, 141, 109, 0.8);
+            --transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --pop-transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --grain-pattern: url('https://www.transparenttextures.com/patterns/p6.png');
+        }
+
+        /* FIXED: Added html to overflow-x hidden to kill the extra right space */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; width: 100%; position: relative; }
+        
+        body { font-family: 'Poppins', sans-serif; background-color: var(--light-tan); color: var(--dark-coffee); }
+        
+        .container { width: 90%; max-width: 1400px; margin: 0 auto; position: relative; }
+
+        h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 2px; font-size: clamp(2.5rem, 7vw, 5.5rem); }
+        h2 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 1px; font-size: clamp(1.8rem, 4.5vw, 3.2rem); line-height: 1.1; margin-bottom: 1.5rem; }
+        h3 { font-family: 'Playfair Display', serif; text-transform: uppercase; font-size: clamp(1.4rem, 2.5vw, 2.2rem); margin-bottom: 1rem; }
+
+        .accent-font { font-family: 'Dancing Script', cursive; text-transform: none; color: var(--dark-coffee); font-size: clamp(1.2rem, 2vw, 1.8rem); opacity: 0.9; display: block; margin-bottom: 10px; }
+
+        .reveal { opacity: 0; transform: translateY(60px) scale(0.98); transition: var(--pop-transition); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            background-color: var(--nav-bg);
+            transition: var(--transition-smooth); 
+            opacity: 0; transform: translateY(-50px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        nav.loaded { opacity: 1; transform: translateY(0); }
+        nav.scrolled { background-color: #8e7a5d; }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; transition: var(--transition-smooth); }
+        nav.scrolled .nav-inner { padding: 0.8rem 5%; }
+        .logo { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 700; color: white; font-family: 'Playfair Display', serif; text-decoration: none; z-index: 2100; }
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 2100; }
+        .menu-toggle span { width: 25px; height: 3px; background: white; transition: 0.3s; }
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; }
+        .active-link { border-bottom: 2px solid white; padding-bottom: 5px; }
+
+        /* --- HERO --- */
+        .franchise-hero {
+            height: 60vh;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            color: white; text-align: center; overflow: hidden;
+            background-color: #1a1a1a;
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('franchise-hero.jpg') center/cover;
+            opacity: 0; transform: scale(1.1); transition: 1.5s; z-index: -1;
+        }
+        .hero-bg.ready { opacity: 1; transform: scale(1); }
+
+        /* --- PACKAGE CARDS --- */
+        .packages-section { padding: 8rem 0; background-color: var(--off-white); background-image: var(--grain-pattern); text-align: center; }
+        .pkg-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; margin-top: 4rem; }
+        .pkg-card {
+            background-color: var(--primary-brown);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            transition: var(--transition-smooth);
+        }
+        .pkg-card:hover { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(0,0,0,0.1); background-color: var(--dark-coffee); }
+        .pkg-card h3 { color: white; }
+        .pkg-card .price { font-size: 2.5rem; font-weight: 700; margin: 1rem 0; display: block; font-family: 'Playfair Display', serif; }
+        .pkg-card ul { list-style: none; margin-top: 1.5rem; text-align: left; }
+        .pkg-card li { margin-bottom: 10px; opacity: 0.9; font-size: 0.95rem; }
+
+        /* --- EVENTS & COFFEE CART --- */
+        .events-section { padding: 10rem 0; background-color: var(--light-tan); }
+        .split-flex { display: flex; align-items: center; gap: 5rem; flex-wrap: wrap; }
+        .side-img { flex: 1; min-width: 300px; height: clamp(350px, 50vh, 500px); border-radius: 25px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .side-img img { width: 100%; height: 100%; object-fit: cover; }
+        .side-content { flex: 1; min-width: 300px; }
+        .side-content p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; }
+
+        /* --- CONTACT & SPONSORSHIP --- */
+        .contact-section { padding: 8rem 0; background-color: var(--primary-brown); color: white; text-align: center; }
+        .contact-box { background: rgba(255,255,255,0.1); padding: 4rem; border-radius: 30px; backdrop-filter: blur(10px); max-width: 800px; margin: 0 auto; }
+        .contact-box h2 { color: white; }
+        .contact-box p { font-size: 1.2rem; margin-bottom: 2rem; }
+        .contact-btn { display: inline-block; padding: 1.2rem 3rem; background: white; color: var(--dark-coffee); text-decoration: none; font-weight: 700; border-radius: 50px; transition: 0.3s; margin-top: 1rem; }
+        .contact-btn:hover { background: var(--dark-coffee); color: white; transform: scale(1.05); }
+
+        footer { background-color: var(--dark-coffee); color: var(--light-tan); padding: 3rem 0; text-align: center; font-size: 0.8rem; }
+
+        @media (max-width: 767px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #8e7a5d; flex-direction: column; padding: 2rem; gap: 1.5rem; transform: translateY(-150%); transition: 0.4s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); opacity: 0; pointer-events: none;
+            }
+            .nav-links.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+            .split-flex { flex-direction: column !important; text-align: center; }
+            .side-img { min-width: 100%; height: 300px; }
+            .contact-box { padding: 2rem; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">Mik's Coffee Shop</a>
+            <div class="menu-toggle" id="mobile-menu"><span></span><span></span><span></span></div>
+            <ul class="nav-links" id="nav-list">
+                <li><a href="franchise.html" class="active-link">FRANCHISE</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="franchise-hero">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="container reveal">
+            <span class="accent-font" style="color: white;">Grow With Us</span>
+            <h1>Partnerships & Events</h1>
+        </div>
+    </header>
+
+    <!-- PACKAGES SECTION -->
+    <section class="packages-section">
+        <div class="container">
+            <span class="accent-font">Catering Packages</span>
+            <h2 class="reveal">Our Signature Offers</h2>
+            <div class="pkg-container">
+                <div class="pkg-card reveal">
+                    <h3>Essential Brew</h3>
+                    <span class="price">7k</span>
+                    <ul>
+                        <li>• Minimum of 100 Cups</li>
+                        <li>• Signature House Blend</li>
+                        <li>• Professional Barista Service</li>
+                        <li>• Choice of 3 Hot/Iced Flavors</li>
+                    </ul>
+                </div>
+                <div class="pkg-card reveal" style="transition-delay: 0.2s;">
+                    <h3>The MCS Experience</h3>
+                    <span class="price">15k</span>
+                    <ul>
+                        <li>• Minimum of 100 Cups</li>
+                        <li>• Minimum of 100 Pastries</li>
+                        <li>• Full Mobile Cart Setup</li>
+                        <li>• Perfect for Grand Celebrations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTS SECTION -->
+    <section class="events-section">
+        <div class="container split-flex">
+            <div class="side-img reveal">
+                <img src="fran.jpg" alt="Coffee Cart">
+            </div>
+            <div class="side-content reveal">
+                <span class="accent-font">Host with Mik's</span>
+                <h2>We bring the cafe to you</h2>
+                <p>Elevate your gatherings with our premium mobile coffee cart set up. Whether it’s an intimate celebration or a large-scale gathering, we ensure every guest leaves with a perfectly crafted cup.</p>
+                <p><strong>We are open for:</strong> Birthday Celebrations, Anniversaries, School Events, Corporate Gatherings, and customized Coffee Cart Setups.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section">
+        <div class="container reveal">
+            <div class="contact-box">
+                <span class="accent-font" style="color: white;">Let's Collaborate</span>
+                <h2>Sponsorship & Partnership</h2>
+                <p>At Mik's Coffee Shop, we believe in community growth. We are actively offering sponsorship or partnership opportunities for local organizations and community projects.</p>
+                <div style="margin-top: 2rem;">
+                    <h3>Get in Touch</h3>
+                    <p>For further details and customized bookings, please contact:</p>
+                    <p style="font-size: 1.5rem; font-weight: 700; color: var(--light-tan);">Ms. Yana Cruz</p>
+                    <p style="letter-spacing: 2px;">0931 888 6727</p>
+                    <a href="tel:09318886727" class="contact-btn">CALL US NOW</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>© 2025 Mik's Coffee Shop. All rights reserved.</p></footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            document.getElementById('navbar').classList.add('loaded');
+            document.getElementById('hero-bg').classList.add('ready');
+        });
+
+        const menuBtn = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+        menuBtn.onclick = () => navList.classList.toggle('active');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            window.scrollY > 80 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mik's Coffee Shop | Premium Brews</title>
+    <!-- Professional & Aesthetic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-brown: #c2ae8e; 
+            --light-tan: #f2ede4;     
+            --off-white: #faf9f6;     
+            --dark-coffee: #2c241a;   
+            --nav-bg: rgba(166, 141, 109, 0.8);
+            --transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --pop-transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --grain-pattern: url('https://www.transparenttextures.com/patterns/p6.png');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--light-tan); color: var(--dark-coffee); overflow-x: hidden; width: 100%; }
+        .container { width: 90%; max-width: 1400px; margin: 0 auto; position: relative; }
+
+        h1 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 2px; font-size: clamp(2.5rem, 7vw, 5.5rem); }
+        h2 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 1px; font-size: clamp(2rem, 5.5vw, 4.5rem); line-height: 1.1; }
+        h3 { font-family: 'Playfair Display', serif; text-transform: uppercase; font-size: clamp(1.4rem, 2.5vw, 2.2rem); }
+
+        .accent-font { font-family: 'Dancing Script', cursive; text-transform: none; color: var(--dark-coffee); font-size: clamp(1.2rem, 2vw, 1.8rem); opacity: 0.9; display: block; margin-bottom: 10px; }
+
+        .reveal { opacity: 0; transform: translateY(60px) scale(0.98); transition: var(--pop-transition); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            background-color: var(--nav-bg);
+            transition: var(--transition-smooth); 
+            opacity: 0; transform: translateY(-50px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        nav.loaded { opacity: 1; transform: translateY(0); }
+        nav.scrolled { background-color: #8e7a5d; }
+        
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; transition: var(--transition-smooth); }
+        nav.scrolled .nav-inner { padding: 0.8rem 5%; }
+
+        .logo { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 700; color: white; font-family: 'Playfair Display', serif; text-decoration: none; z-index: 1100; }
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1100; }
+        .menu-toggle span { width: 25px; height: 3px; background: white; transition: 0.3s; }
+
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; }
+
+        /* --- HERO --- */
+        .hero { position: relative; height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; color: white; overflow: hidden; background-color: #1a1a1a; }
+        
+        /* FIXED VIDEO CSS: Removed opacity:0 to prevent black screen */
+        #bg-video { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            z-index: 0; 
+            filter: brightness(0.5);
+            background-color: #1a1a1a; /* Background while loading */
+        }
+
+        .scroll-down-arrow { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); font-size: 2rem; color: white; animation: bounce 2s infinite; cursor: pointer; }
+
+        /* --- DESCRIPTION --- */
+        .description-section { padding: 8rem 0; background-color: var(--off-white); background-image: var(--grain-pattern); text-align: center; }
+        .desc-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 4rem; }
+        .desc-card { height: 500px; position: relative; border-radius: 15px; overflow: hidden; background-size: cover; background-position: center; background-color: var(--primary-brown); }
+        .info-box { position: absolute; bottom: 0; left: 0; width: 100%; height: 20%; background-color: var(--primary-brown); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: var(--transition-smooth); color: white; }
+        .info-box h3 { font-size: 1.3rem; margin: 0; transition: var(--transition-smooth); text-transform: uppercase; }
+        .desc-text { font-size: 0.95rem; line-height: 1.6; opacity: 0; max-height: 0; transition: var(--transition-smooth); pointer-events: none; }
+        .desc-card:hover .info-box { height: 100%; background-color: rgba(44, 36, 26, 0.85); justify-content: center; }
+        .desc-card:hover .desc-text { opacity: 1; max-height: 250px; margin-top: 15px; pointer-events: auto; }
+
+        /* --- BEST SELLERS --- */
+        .best-sellers { padding: 8rem 0; background-color: var(--primary-brown); min-height: 110vh; display: flex; align-items: center; overflow: hidden; }
+        .bs-flex { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 4rem; width: 100%; }
+        .bs-text { flex: 1; color: white; z-index: 20; }
+        .bs-text h2 { margin-bottom: 2rem; border-bottom: 2px solid rgba(255,255,255,0.2); display: inline-block; padding-bottom: 10px; } 
+        .product-info { margin-top: 1.5rem; transition: opacity 0.4s ease; }
+        .product-name { font-size: clamp(1.5rem, 3vw, 2.5rem); color: var(--off-white); font-family: 'Playfair Display', serif; font-style: italic; margin-bottom: 10px; } 
+        .product-desc { font-size: 1rem; line-height: 1.6; opacity: 0.9; text-transform: none; max-width: 450px; font-weight: 300; }
+
+        .bs-visuals { flex: 1.5; height: 650px; position: relative; display: flex; justify-content: center; align-items: center; }
+        .bs-item { position: absolute; border-radius: 50%; background-size: cover; background-position: center; transition: var(--transition-smooth); cursor: pointer; box-shadow: 0 20px 50px rgba(0,0,0,0.2); pointer-events: none; opacity: 0; }
+        .bs-item.top { width: 260px; height: 260px; transform: translateY(-240px); opacity: 0.5; z-index: 5; pointer-events: auto; }
+        .bs-item.mid { width: 480px; height: 480px; transform: translateY(0); opacity: 1; z-index: 10; border: 12px solid var(--off-white); }
+        .bs-item.bot { width: 260px; height: 260px; transform: translateY(240px); opacity: 0.5; z-index: 5; pointer-events: auto; }
+
+        /* --- RATINGS --- */
+        .customer-love { padding: 8rem 0; background-color: var(--light-tan); background-image: var(--grain-pattern); overflow: hidden; text-align: center; }
+        .marquee-content { display: flex; gap: 2rem; padding: 2rem 0; animation: infinite-scroll 60s linear infinite; width: max-content; }
+        .review-bubble { width: 350px; background-color: var(--primary-brown); padding: 2rem; border-radius: 25px; text-align: left; color: white; flex-shrink: 0; transition: var(--transition-smooth); }
+        @keyframes infinite-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        footer { background-color: var(--dark-coffee); color: var(--light-tan); padding: 2.5rem 0; text-align: center; font-size: 0.8rem; }
+
+        /* --- MOBILE MEDIA QUERIES --- */
+        @media (max-width: 1023px) {
+            .bs-flex { display: block; text-align: center; }
+            .bs-text { width: 100%; margin-bottom: 12rem; } 
+            .product-desc { margin: 0 auto; }
+            .bs-visuals { width: 100%; height: 500px; position: relative; }
+            .bs-item.mid { width: 320px; height: 320px; }
+            .bs-item.top { transform: translateY(-160px); width: 180px; height: 180px; }
+            .bs-item.bot { transform: translateY(160px); width: 180px; height: 180px; }
+        }
+
+        @media (max-width: 767px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; 
+                background: #8e7a5d; flex-direction: column; 
+                padding: 2.5rem; gap: 2rem; transform: translateY(-150%); 
+                transition: 0.4s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); opacity: 0; pointer-events: none;
+            }
+            .nav-links.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">Mik's Coffee Shop</a>
+            <div class="menu-toggle" id="mobile-menu"><span></span><span></span><span></span></div>
+            <ul class="nav-links" id="nav-list">
+                <li><a href="franchise.html">FRANCHISE</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <!-- --- VIDEO FIX: Ensure path is exact. Must have 'autoplay muted loop' --- -->
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="miks.mov" type="video/mp4">
+        </video>
+
+        <div class="container reveal">
+            <span class="accent-font" style="color: white;">Since 2025</span>
+            <h1>Mik's Coffee Shop</h1>
+            <p>"Elevating your daily ritual, one bean at a time."</p>
+        </div>
+        <div class="scroll-down-arrow">▼</div>
+    </section>
+
+    <!-- (Description, Best Sellers, and Ratings sections follow exactly as previous stable code) -->
+
+    <section class="description-section">
+        <div class="container">
+            <span class="accent-font">Our Philosophy</span>
+            <h2 class="reveal">Experience Excellence</h2>
+            <div class="desc-container">
+                <div class="desc-card reveal" style="background-image: url('bean.jpg');">
+                    <div class="info-box"><h3>Premium Beans</h3><p class="desc-text">Ethically sourced and roasted in small batches.</p></div>
+                </div>
+                <div class="desc-card reveal" style="background-image: url('bake.jpg');">
+                    <div class="info-box"><h3>Fresh Kitchen</h3><p class="desc-text">Every croissant is baked on-site daily.</p></div>
+                </div>
+                <div class="desc-card reveal" style="background-image: url('cus.jpg');">
+                    <div class="info-box"><h3>Service First</h3><p class="desc-text">Expert baristas dedicated to your visit.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="best-sellers">
+        <div class="container bs-flex">
+            <div class="bs-text reveal">
+                <span class="accent-font" style="color: white;">The Crowd Favorites</span>
+                <h2>Best Sellers</h2>
+                <div id="product-display" class="product-info">
+                    <h3 class="product-name" id="p-name">Loading...</h3>
+                    <p class="product-desc" id="p-desc">Our signature favorites, hand-selected for you.</p>
+                </div>
+            </div>
+            <div class="bs-visuals reveal" id="carousel">
+                <div class="bs-item" style="background-image: url('cm.PNG')"></div>
+                <div class="bs-item" style="background-image: url('dm.PNG')"></div>
+                <div class="bs-item" style="background-image: url('Bpr.PNG')"></div>
+                <div class="bs-item" style="background-image: url('hncs.PNG')"></div>
+                <div class="bs-item" style="background-image: url('sc.PNG')"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="customer-love">
+        <div class="container">
+            <span class="accent-font">Our Community</span>
+            <h2>Customer Love</h2>
+            <div style="overflow: hidden; width: 100%;">
+                <div class="marquee-content">
+                    <div class="review-bubble"><span>Anonymous</span><p>"Sarap talaga ng foods niyo, nagustuhan ng aking anak na pihikan"</p></div>
+                    <div class="review-bubble"><span>Anonymous</span><p>"Masarap po yung chicken, Lalo na yung Garlic Parmesian!"</p></div>
+                    <div class="review-bubble"><span>Anonymous</span><p>"Thank you! sarap ng food nagustuhan ng kapatid at mama ko"</p></div>
+                    <div class="review-bubble"><span>Aaron A.</span><p>"We visted your cafe and really loved the vibe of the place!"</p></div>
+                    <div class="review-bubble"><span>Anonymous</span><p>"Masarap po yung chicken, Lalo na yung Garlic Parmesian!"</p></div>
+                    <div class="review-bubble"><span>Anonymous</span><p>"Sarap talaga ng foods niyo, nagustuhan ng aking anak na pihikan"</p></div>
+                    <div class="review-bubble"><span>Aaron A.</span><p>"We visted your cafe and really loved the vibe of the place!"</p></div>
+                    <div class="review-bubble"><span>Anonymous</span><p>"Thank you! sarap ng food nagustuhan ng kapatid at mama ko"</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>© 2025 Mik's Coffee Shop. All rights reserved.</p></footer>
+
+    <script>
+        // Start Navbar animation immediately
+        window.addEventListener('load', () => { 
+            document.getElementById('navbar').classList.add('loaded'); 
+        });
+
+        // Toggle Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+        menuBtn.onclick = () => navList.classList.toggle('active');
+
+        // Sticky Nav logic
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            window.scrollY > 80 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+        });
+
+        // BEST SELLERS DATA & SLIDER
+        const products = [
+            { name: "Caramel Macchiato", desc: "Smooth espresso layered with creamy milk and finished with sweet caramel drizzle." },
+            { name: "Dirty Matcha", desc: "Premium matcha blended with milk and topped with a bold shot of espresso." },
+            { name: "Beef Pepper Steak", desc: "Tender beef slices tossed in a rich pepper sauce and served sizzling hot." },
+            { name: "Ham & Cheese Sandwich", desc: "Savory ham and melted cheese served between freshly baked bread." },
+            { name: "Salted Caramel", desc: "A creamy caramel beverage balanced with a touch of sea salt for the perfect sweet and salty flavor." }
+        ];
+
+        const items = document.querySelectorAll('.bs-item');
+        let midIndex = 0;
+
+        function updateCarousel() {
+            const textDisplay = document.getElementById('product-display');
+            textDisplay.style.opacity = 0;
+
+            setTimeout(() => {
+                document.getElementById('p-name').innerText = products[midIndex].name;
+                document.getElementById('p-desc').innerText = products[midIndex].desc;
+                textDisplay.style.opacity = 1;
+            }, 300);
+
+            items.forEach((item, index) => {
+                item.className = 'bs-item'; item.onclick = null;
+                const len = items.length;
+                const t = (midIndex - 1 + len) % len, b = (midIndex + 1) % len;
+                if (index === midIndex) item.classList.add('mid');
+                else if (index === t) { item.classList.add('top'); item.onclick = () => { midIndex = t; updateCarousel(); } }
+                else if (index === b) { item.classList.add('bot'); item.onclick = () => { midIndex = b; updateCarousel(); } }
+            });
+        }
+        updateCarousel();
+
+        // Scroll Reveal observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
